@@ -1,8 +1,12 @@
+import LoginCard from "./login-card";
 
-const LoginPage = () => {
+export default async function Login() {
   return (
-    <div>Helllo from login page</div>
-  )
+    <>
+      <h1 className="text-2xl font-bold text-center mb-4">
+        Log in to SnapNext
+      </h1>
+      <LoginCard />
+    </>
+  );
 }
-
-export default LoginPage
