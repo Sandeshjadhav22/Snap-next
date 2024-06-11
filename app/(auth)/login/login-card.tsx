@@ -34,7 +34,7 @@ export default function LoginCard() {
 function LoginButton() { 
   const {pending} =   useFormStatus()
   return (
-    <Button className="w-full flex gap-2"disabled={pending}>
+    <Button className="w-full flex gap-2"disabled={pending} aria-disabled={pending}>
       <Image src={"/github.svg"} width={20} height={20} alt="Github logo" /> Log
       in with Github
     </Button>
