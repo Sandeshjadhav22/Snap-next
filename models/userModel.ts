@@ -1,4 +1,4 @@
-import mongoose, { Model } from "mongoose";
+import mongoose, { Document, Model } from "mongoose";
 
 export interface IUSer {
   username: string;
@@ -7,7 +7,7 @@ export interface IUSer {
   avatar?: string;
 }
 
-export interface IUserDocument extends IUSer, Document {
+export interface IUserDocument extends IUSer, Document{
   createdAt: Date;
   updatedAt: Date;
 }
