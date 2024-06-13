@@ -9,7 +9,10 @@ export const getUsersForSidebar = async (authUserId: string) => {
     const userInfo = await Promise.all(
       allUsers.map(async (user) => {
         const lastMessage: IMessageDocument | null = await Message.findOne({
-          $or: [{ sender: user._id }, { reciver: user._id }],
+          $or: [
+            { sender: user._id ,  reciver: authUserId },
+            { sender: authUserId ,  reciver: user._id },
+          ],
         })
           .sort({ createdAt: -1 })
           .populate("sender", "fullName avatar _id")
@@ -31,5 +34,9 @@ export const getUsersForSidebar = async (authUserId: string) => {
     );
 
     return userInfo;
-  } catch (error) {}
+  } catch (error) {
+    console.log("Error in getuserinSideBar", error);
+    
+    throw error;
+  }
 };
