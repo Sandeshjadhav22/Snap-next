@@ -1,10 +1,11 @@
 "use server";
 import { auth, signIn, signOut } from "@/auth";
 import { connectToMongoDb } from "./db";
-import {v2 as cloudinary } from "cloudinary";
+import { v2 as cloudinary } from "cloudinary";
 import Message, { IMessageDocument } from "@/models/messageModel";
 import Chat, { IChatDocument } from "@/models/chatModel";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_noStore as noStore } from "next/cache";
+import { redirect } from "next/navigation";
 
 
 
@@ -31,7 +32,7 @@ export async function logoutAction() {
 }
 
 export const sendMessageAction = async (receiverId: string, content: string, messageType: "image" | "text") => {
-	// noStore();
+	noStore();
 	try {
 		const session = await auth();
 		if (!session) return;
