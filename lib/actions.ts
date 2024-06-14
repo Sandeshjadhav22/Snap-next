@@ -6,6 +6,7 @@ import Message, { IMessageDocument } from "@/models/messageModel";
 import Chat, { IChatDocument } from "@/models/chatModel";
 import { revalidatePath, unstable_noStore as noStore } from "next/cache";
 import { redirect } from "next/navigation";
+import mongoose from "mongoose";
 
 
 
@@ -45,11 +46,14 @@ export const sendMessageAction = async (receiverId: string, content: string, mes
 		}
 
 		const newMessage: IMessageDocument = await Message.create({
-			sender: senderId,
-			receiver: receiverId,
+			sender: new mongoose.Types.ObjectId(senderId),
+			receiver: new mongoose.Types.ObjectId(receiverId),
 			content: uploadedResponse?.secure_url || content,
 			messageType,
-		});
+		  });
+
+		    // Ensure the type of newMessage._id is ObjectId
+			const newMessageId: mongoose.Types.ObjectId = newMessage._id as mongoose.Types.ObjectId;
 
 		let chat: IChatDocument | null = await Chat.findOne({
 			participants: { $all: [senderId, receiverId] },
@@ -58,10 +62,10 @@ export const sendMessageAction = async (receiverId: string, content: string, mes
 		if (!chat) {
 			chat = await Chat.create({
 				participants: [senderId, receiverId],
-				messages: [newMessage._id],
+				messages: [newMessageId],
 			});
 		} else {
-			chat.messages.push(newMessage._id);
+			chat.messages.push(newMessageId);
 			await chat.save();
 		}
 

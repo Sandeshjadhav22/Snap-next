@@ -12,6 +12,10 @@ export interface IMessage {
 }
 
 export interface IMessageDocument extends IMessage, Document {
+	sender: PopulatedDoc<IUserDocument>;
+	receiver: PopulatedDoc<IUserDocument>;
+	content: string;
+	messageType: "image" | "text";
 	createdAt: Date;
 	updatedAt: Date;
 }

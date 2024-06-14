@@ -6,54 +6,10 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Dialog, DialogContent } from "../ui/dialog";
 
-// // Mock messages, only used for demo purposes
-// const messages = [
-// 	{
-// 		_id: "1",
-// 		content: "Hello",
-// 		sender: { _id: "1", fullName: "John Doe" },
-// 		messageType: "text",
-// 	},
-// 	{
-// 		_id: "2",
-// 		content: "Heyy!",
-// 		sender: { _id: "1", fullName: "Jane Doe" },
-// 		messageType: "text",
-// 	},
-// 	{
-// 		_id: "3",
-// 		content: "how's it going?",
-// 		sender: { _id: "1", fullName: "John Doe" },
-// 		messageType: "text",
-// 	},
-// 	{
-// 		_id: "4",
-// 		content: "Doing great! How about you?",
-// 		sender: { _id: "2", fullName: "Jane Doe" },
-// 		messageType: "text",
-// 	},
-// 	{
-// 		_id: "5",
-// 		content: "Thank you! ",
-// 		sender: { _id: "1", fullName: "John Doe" },
-// 		messageType: "text",
-// 	},
-// 	{
-// 		_id: "6",
-// 		content: "See you later!",
-// 		sender: { _id: "2", fullName: "Jane Doe" },
-// 		messageType: "text",
-// 	},
-// 	{
-// 		_id: "7",
-// 		content: "See ya!",
-// 		sender: { _id: "1", fullName: "John Doe" },
-// 		messageType: "text",
-// 	},
-// ];
+
 
 type ChatMessagesProps = {
-	messages: IMessageDocument[] | PopulatedDoc<IMessageDocument>[] ;
+	messages: IMessageDocument[] | PopulatedDoc<IMessageDocument>[];
 	session: Session | null;
 };
 
@@ -71,10 +27,14 @@ const ChatMessages = ({ messages, session }: ChatMessagesProps) => {
 	return (
 		<>
 			{messages.map((message, idx) => {
-				const amISender = message?.sender._id === session?.user?._id;
-				const senderFullName = message?.sender.fullName.toUpperCase();
+				if (typeof message === 'string') {
+					// Handle ObjectId values
+					return null;
+				  }
+				const amISender = message?.sender?._id === session?.user?._id;
+				const senderFullName = message?.sender?.fullName?.toUpperCase();
 				const isMessageImage = message?.messageType === "image";
-				const isPrevMessageFromSameSender = idx > 0 && messages[idx - 1]?.sender._id === message?.sender._id;
+				const isPrevMessageFromSameSender = idx > 0 && messages[idx - 1]?.sender?._id === message?.sender._id;
 				const handleImageLoad = () => {
 					lastMsgRef.current?.scrollIntoView({ behavior: "smooth" });
 				};

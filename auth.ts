@@ -19,7 +19,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (session.user) {
           const user = await User.findOne({ email: session.user.email });
           if (user) {
-            session.user._id = user._id;
+            session.user._id = user._id.toString();
             return session;
           } else {
             throw new Error("User not found");
