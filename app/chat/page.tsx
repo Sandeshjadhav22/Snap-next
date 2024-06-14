@@ -1,7 +1,9 @@
 import ChatCamera from "@/components/chat/chat-camera";
+import { unstable_noStore } from "next/cache";
 import Image from "next/image";
 
 export default function ChatRootPage() {
+	unstable_noStore()
 	return (
 		<main className='flex-grow bg-sigMain items-center flex px-2'>
 			<div
