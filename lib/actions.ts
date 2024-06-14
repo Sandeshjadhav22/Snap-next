@@ -76,3 +76,25 @@ export const sendMessageAction = async (receiverId: string, content: string, mes
 		throw error;
 	}
 };
+
+export const deleteChatAction = async (userId: string) => {
+	try {
+		await connectToMongoDb();
+		const { user } = (await auth()) || {};
+		if (!user) return;
+		const chat = await Chat.findOne({ participants: { $all: [user._id, userId] } });
+		if (!chat) return;
+
+		const messageIds = chat.messages.map((messageId) => messageId.toString());
+		await Message.deleteMany({ _id: { $in: messageIds } });
+		await Chat.deleteOne({ _id: chat._id });
+
+		revalidatePath("/chat/[id]", "page");
+		// this will throw an error bc it internally throws an error
+		// redirect("/chat");
+	} catch (error: any) {
+		console.error("Error in deleteChat:", error.message);
+		throw error;
+	}
+	redirect("/chat");
+};
